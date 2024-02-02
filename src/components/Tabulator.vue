@@ -1,14 +1,15 @@
 <template>
-  <div>
-    <div v-if="showAlert">
-      <el-alert  center
+  <div class="tab">
+    <!-- <div v-if="showAlert">
+      <el-alert
+        center
         title="Error"
         type="error"
         description="This Port already exists!"
         show-icon
       >
       </el-alert>
-    </div>
+    </div> -->
     <el-dialog
       style="font-size: 28px; border-radius=20px;"
       title="Advice"
@@ -16,7 +17,7 @@
       width="30%"
     >
       <span style="font-weight: 500; font-size: 17px"
-        >It seems that your localStorage contains importable data. Do you want
+        >It seems that your localStorage may have importable data. Do you want
         to use it?</span
       >
       <span slot="footer" class="dialog-footer">
@@ -60,11 +61,12 @@
       </div>
 
       <el-table
-        :data="
-          tableData.filter((data) => !search || data.port.includes(search))
-        "
+        stripe="true"
+        empty-text="No Data Available!"
+        :data="paginatedData"
         :row-key="getRowKey"
         style="width: 95%; margin: auto"
+        max-height="350"
         border
       >
         <el-table-column prop="port" label="Port" sortable>
@@ -112,6 +114,15 @@
           </template>
         </el-table-column>
       </el-table>
+      <el-pagination
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+      :current-page.sync="currentPage"
+      :page-sizes="[10, 20, 30, 50]"
+      :page-size="pageSize"
+      layout="total, sizes, prev, pager, next, jumper"
+      :total="filteredData.length">
+    </el-pagination>
     </div>
   </div>
 </template>
@@ -120,16 +131,34 @@
 export default {
   data() {
     return {
-      showAlert: false,
-      noData: "No Data Available!",
+      // noData: "No Data Available!",
       tableData: [],
       editingRowIndex: null,
       search: "",
       dialogVisible: false,
       importLocalStorage: false,
+      currentPage: 1,
+      pageSize: 10,
     };
   },
+  computed: {
+    filteredData() {
+      const { search, tableData } = this;
+      return tableData.filter(data => !search || data.port.includes(search));
+    },
+    paginatedData() {
+      const startIndex = (this.currentPage - 1) * this.pageSize;
+      const endIndex = startIndex + this.pageSize;
+      return this.filteredData.slice(startIndex, endIndex);;
+    }
+  },
   methods: {
+    handleSizeChange(size) {
+      this.pageSize = size;
+    },
+    handleCurrentChange(page) {
+      this.currentPage = page;
+    },
     localHandler(yes) {
       this.dialogVisible = false;
       this.importLocalStorage = yes;
@@ -147,7 +176,7 @@ export default {
         message: message,
         type: "success",
         position: "bottom-right",
-        offset: 100,
+        duration: 2000,
       });
     },
     open4() {
@@ -155,7 +184,15 @@ export default {
         title: "Deleted",
         // message: 'Deleted!',
         position: "bottom-right",
-        offset: 100,
+        duration: 2000,
+      });
+    },
+    error() {
+      this.$notify.error({
+        title: "Error",
+        message: "This port already exists!",
+        position: "top-right",
+        duration: 2000,
       });
     },
     saveRow(index) {
@@ -172,10 +209,11 @@ export default {
           ).length > 0;
 
         if (hasDuplicates) {
-          this.showAlert = true;
-          setTimeout(() => {
-            this.showAlert = false;
-          }, 4000);
+          if (this.tableData[index].port === "") {
+            this.editingRowIndex = null;
+            return;
+          }
+          this.error();
           console.log("Duplicate values");
           this.editingRowIndex = index;
           return;
@@ -226,7 +264,7 @@ export default {
         message: "You have Edited Port/Ip",
         type: "warning",
         position: "bottom-right",
-        offset: 100,
+        duration: 2000,
       });
     },
     generateUniqueId() {
@@ -302,7 +340,7 @@ export default {
     } else {
       console.log("No Data in localStorage...");
     }
-    this.fix();
+    // this.fix();
   },
 };
 </script>
@@ -313,13 +351,13 @@ export default {
   max-width: 308px;
 }
 .tabulator {
-  margin-top: 10vh;
+  margin-top: 5vh;
 }
 .top-btns {
   display: flex;
   justify-content: flex-end;
   padding: 10px;
-  margin: 0px 30px;
+  margin: 0px 7px;
 }
 div .cell {
   display: flex;

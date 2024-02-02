@@ -1,57 +1,53 @@
-<template>
-  <div>
-    <el-menu
-      :default-active="activeIndex2"
-      class="el-menu-demo"
-      mode="horizontal"
-      @select="handleSelect"
-      background-color="black"
-      text-color="#fff"
-      active-text-color="#ffd04b"
-    >
-      <el-menu-item index="1" class="logo">
-        <img src="../assets/logo.png" alt="logo" class="logo-img" />
-      </el-menu-item>
-      <el-menu-item index="2">Home</el-menu-item>
-      <el-submenu index="3">
-        <template slot="title">Industries</template>
-        <el-menu-item index="3-1">Railway</el-menu-item>
-        <el-menu-item index="3-2">Oil</el-menu-item>
-        <el-menu-item index="3-3">Gas</el-menu-item>
-        <el-submenu index="3-4">
-          <template slot="title">Power</template>
-          <el-menu-item index="3-4-1">Generation</el-menu-item>
-          <el-menu-item index="3-4-2">Transmission</el-menu-item>
-          <el-menu-item index="3-4-3">Distribution</el-menu-item>
-        </el-submenu>
-      </el-submenu>
-    </el-menu>
+<template lang="">
+  <div class="nav">
+    <nav class="nav-items">
+      <img src="../assets/logo.png" alt="logo" class="logo-img" />
+      <button class="btn" @click="closeWindow">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="3em"
+          height="5em"
+          viewBox="0 0 24 24"
+        >
+          <path
+            fill="#ffffff"
+            d="M6.4 19L5 17.6l5.6-5.6L5 6.4L6.4 5l5.6 5.6L17.6 5L19 6.4L13.4 12l5.6 5.6l-1.4 1.4l-5.6-5.6z"
+          ></path>
+        </svg>
+      </button>
+    </nav>
   </div>
 </template>
-
 <script>
 export default {
-  data() {
-    return {
-      activeIndex: "2",
-      activeIndex2: "2",
-    };
-  },
-  methods: {
-    handleSelect(key, keyPath) {
-      console.log(key, keyPath);
-    },
-  },
+  name: "MaterialSymbolsClose",
+  methods:{
+    closeWindow(){
+      window.close();
+    }
+  }
 };
 </script>
-
 <style scoped>
-.el-menu-demo {
-  font-weight: bold;
+.nav {
+  background-color: black;
 }
-
-.logo-img {
-  width: 60px; /* Adjust the size as needed */
-  height: auto;
+img {
+  height: 86px;
+}
+.nav-items{
+  display: flex;
+  justify-content: space-between;
+  padding: 2px;
+}
+.btn{
+  background-color: red;
+  padding: 5px;
+  cursor: pointer;
+  border-radius:1px;
+  border: none;
+}
+.btn:hover{
+  background-color: rgb(247, 10, 10);
 }
 </style>

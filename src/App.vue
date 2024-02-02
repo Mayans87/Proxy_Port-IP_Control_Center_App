@@ -16,21 +16,39 @@ export default {
   <div id="app">
     <main>
       <Nav />
-      <Tabulator />
+      <div class="table">
+        <Tabulator />
+      </div>
     </main>
     <footer class="footer">
       <Footer />
     </footer>
   </div>
 </template>
-<style scoped>
+<style>
+main {
+  flex: 1 0 auto;
+}
 #app {
-  min-height: 130vh;
+  max-height: 100vh;
   display: flex;
   flex-direction: column;
 }
 
 .footer {
   margin-top: auto;
+}
+.table{
+  height: 63.3vh;
+  padding-bottom: 10px;
+
+}
+.el-table {
+  max-height: 54vh;
+  overflow-y: auto;
+}
+.el-pagination{
+  text-align: center;
+  margin-top: 2px;
 }
 </style>
